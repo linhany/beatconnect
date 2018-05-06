@@ -26,22 +26,20 @@ class App extends Component {
     this.callInfinity();
   }
 
-  callInfinity() {
-    var resultFound = false;
-
-    var fetchNow = function() {
-      fetch('https://light-n.herokuapp.com/retrieve', {mode: 'no-cors'})
+  callInfinity = () => {
+    
+    var fetchNow = () => {
+      fetch('https://light-n.herokuapp.com/retrieve')
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-        if(data.title) {
-          resultFound = true;
-        } else { 
-          setTimeout(function () {
-            fetchNow();
-          }, 5000);
-        }})
-      .catch(err => console.log(err))
+        this.setEmoticon();
+      })
+      .catch(err =>  {
+        console.log("ERRORED, fetching again...")
+        setTimeout(function () {
+          fetchNow();
+        }, 5000);
+      })
     }
 
     fetchNow();
@@ -74,11 +72,14 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {isHidden: true};
+
+    this.setEmoticon=this.setEmoticon.bind(this);
   }
 
   // the api request from fitbit native app will unhide this
   setEmoticon() {
-    this.setState({isHidden: true});
+    console.log("edwdw");
+    this.setState({isHidden: false});
   }
 
   render() {
