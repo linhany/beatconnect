@@ -11,7 +11,8 @@ import { token } from './token.js'
 class App extends Component {
   state = {
     times: [],
-    values: []
+    values: [],
+    isHidden: false
   }
 
   componentDidMount() {
@@ -21,6 +22,29 @@ class App extends Component {
         .then(response => response.json())
         .then(data => this.getGraphData(data))
         .catch(err => console.log(err))
+
+    this.callInfinity();
+  }
+
+  callInfinity() {
+    var resultFound = false;
+
+    var fetchNow = function() {
+      fetch('https://light-n.herokuapp.com/retrieve', {mode: 'no-cors'})
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if(data.title) {
+          resultFound = true;
+        } else { 
+          setTimeout(function () {
+            fetchNow();
+          }, 5000);
+        }})
+      .catch(err => console.log(err))
+    }
+
+    fetchNow();
   }
 
   getGraphData(obj) {
